@@ -20,12 +20,24 @@
       <p>
         Welcome to Expert-Soft training!
       </p>
+      <form>
+        <input name="query" value="${param.query}">
+        <button>Search</button>
+      </form>
       <table>
         <thead>
           <tr>
             <td>Image</td>
-            <td>Description</td>
-            <td class="price">Price</td>
+            <td>
+              Description
+              <a href="${pageContext.servletContext.contextPath}/products?sortField=description&sortMode=asc">asc</a>
+              <a href="${pageContext.servletContext.contextPath}/products?sortField=description&sortMode=desc">desc</a>
+            </td>
+            <td class="price">
+              Price
+              <a href="${pageContext.servletContext.contextPath}/products?sortField=price&sortMode=asc">asc</a>
+              <a href="${pageContext.servletContext.contextPath}/products?sortField=price&sortMode=desc">desc</a>
+            </td>
           </tr>
         </thead>
         <c:forEach var="product" items="${products}">
