@@ -2,6 +2,7 @@ package com.es.phoneshop.model.product;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ArrayListProductDao implements ProductDao {
@@ -9,12 +10,7 @@ public class ArrayListProductDao implements ProductDao {
 
     @Override
     public synchronized Product getProduct(Long id) {
-        for (Product product : productsList) {
-            if (product.getId().equals(id)) {
-                return product;
-            }
-        }
-        return null;
+        return productsList.stream().filter(p -> p.getId().equals(id)).findFirst().orElse(null);
     }
 
     @Override

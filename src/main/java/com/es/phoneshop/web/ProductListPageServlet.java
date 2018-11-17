@@ -10,14 +10,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Currency;
-import java.util.List;
 
 public class ProductListPageServlet extends HttpServlet {
-    private final ArrayListProductDao dao = new ArrayListProductDao();
+    private ArrayListProductDao dao;
 
     @Override
     public void init() throws ServletException {
         super.init();
+        dao = new ArrayListProductDao();
         Currency usd = Currency.getInstance("USD");
         dao.save(new Product(1L, "sgs", "Samsung Galaxy S II", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg"));
         dao.save(new Product(2L, "sgs2", "Samsung Galaxy S II", new BigDecimal(200), usd, 0, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20II.jpg"));
@@ -39,8 +39,4 @@ public class ProductListPageServlet extends HttpServlet {
         request.setAttribute("products", dao.findProducts());
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
-
-//    private List<Product> getSampleProducts() {
-//        return dao.findProducts();
-//    }
 }
