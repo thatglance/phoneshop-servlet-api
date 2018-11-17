@@ -6,7 +6,27 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ArrayListProductDao implements ProductDao {
-    private List<Product> productsList = new ArrayList<>();
+
+    private static volatile ArrayListProductDao instance;
+    private List<Product> productsList;
+
+    private ArrayListProductDao(){
+        productsList = new ArrayList<>();
+    }
+
+    public static ArrayListProductDao getInstance(){
+        ArrayListProductDao tempInstance = instance;
+        if (tempInstance == null){
+            synchronized (ArrayListProductDao.class){
+                tempInstance = instance;
+                if (tempInstance == null){
+                    instance = tempInstance = new ArrayListProductDao();
+                }
+            }
+        }
+
+        return tempInstance;
+    }
 
     @Override
     public synchronized Product getProduct(Long id) {
