@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Currency;
 
-public class ProductListPageServlet extends HttpServlet {
+public class ProductDetailsPageServlet extends HttpServlet {
     private ArrayListProductDao dao;
 
     @Override
@@ -22,10 +22,10 @@ public class ProductListPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("products", dao.findProducts(
-                request.getParameter("query"),
-                request.getParameter("sortField"),
-                request.getParameter("sortMode")));
-        request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
+        String uri = request.getRequestURI();
+        int lastSlashIndex = uri.lastIndexOf("/");
+        String id = uri.substring(lastSlashIndex + 1);
+        request.setAttribute("product", dao.getProduct(Long.valueOf(id)));
+        request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
     }
 }

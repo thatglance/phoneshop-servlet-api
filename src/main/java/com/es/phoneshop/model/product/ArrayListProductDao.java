@@ -37,16 +37,40 @@ public class ArrayListProductDao implements ProductDao {
     @Override
     public synchronized List<Product> findProducts(final String query, final String sortField, final String sortMode) {
         return productsList.stream().filter(p -> (p.getPrice() != null) && (p.getStock() > 0))
-                .filter(p -> query == null || p.getDescription().contains(query))
-                .sorted((o1, o2) -> {
-                    if(sortField!=null&&sortMode!=null){
-                        if(sortField.equals("description")){
-                                return sortMode.equals("asc")?o1.getDescription().compareTo(o2.getDescription())
-                                        :o2.getDescription().compareTo(o1.getDescription());
-                        } else if(sortField.equals("price")){
-                            return sortMode.equals("asc")?o1.getPrice().compareTo(o2.getPrice())
-                                    :o2.getPrice().compareTo(o1.getPrice());
+                .filter(p -> {
+                    if (query == null) {
+                        return true;
+                    }
+                    String[] queryParts = query.split(" ");
+                    for (String part : queryParts) {
+                        if (p.getDescription().contains(part)) {
+                            return true;
                         }
+                    }
+                    return false;
+                })
+                .sorted((product1, product2) -> {
+                    if (sortField != null && sortMode != null) {
+                        if (sortField.equals("description")) {
+                            return sortMode.equals("asc") ? product1.getDescription().compareTo(product2.getDescription())
+                                    : product2.getDescription().compareTo(product1.getDescription());
+                        } else if (sortField.equals("price")) {
+                            return sortMode.equals("asc") ? product1.getPrice().compareTo(product2.getPrice())
+                                    : product2.getPrice().compareTo(product1.getPrice());
+                        }
+                    }
+                    if(query!=null){
+                        String[] queryParts = query.split(" ");
+                        int coincidenceNum1 = 0, coincidenceNum2 = 0;
+                        for (String part : queryParts) {
+                            if (product1.getDescription().contains(part)) {
+                                coincidenceNum1++;
+                            }
+                            if (product2.getDescription().contains(part)) {
+                                coincidenceNum2++;
+                            }
+                        }
+                        return Integer.compare(coincidenceNum2, coincidenceNum1);
                     }
                     return 0;
                 })

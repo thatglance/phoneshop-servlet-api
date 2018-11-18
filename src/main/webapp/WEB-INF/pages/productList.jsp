@@ -30,13 +30,13 @@
             <td>Image</td>
             <td>
               Description
-              <a href="${pageContext.servletContext.contextPath}/products?sortField=description&sortMode=asc">asc</a>
-              <a href="${pageContext.servletContext.contextPath}/products?sortField=description&sortMode=desc">desc</a>
+              <a href="${pageContext.servletContext.contextPath}/products?sortField=description&sortMode=asc&query=${param.query}">asc</a>
+              <a href="${pageContext.servletContext.contextPath}/products?sortField=description&sortMode=desc&query=${param.query}">desc</a>
             </td>
             <td class="price">
               Price
-              <a href="${pageContext.servletContext.contextPath}/products?sortField=price&sortMode=asc">asc</a>
-              <a href="${pageContext.servletContext.contextPath}/products?sortField=price&sortMode=desc">desc</a>
+              <a href="${pageContext.servletContext.contextPath}/products?sortField=price&sortMode=asc&query=${param.query}">asc</a>
+              <a href="${pageContext.servletContext.contextPath}/products?sortField=price&sortMode=desc&query=${param.query}">desc</a>
             </td>
           </tr>
         </thead>
@@ -45,7 +45,9 @@
             <td>
               <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
             </td>
-            <td>${product.description}</td>
+            <td>
+                <a href="${pageContext.servletContext.contextPath}/products/${product.id}">${product.description}</a>
+            </td>
             <td class="price">
               <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
             </td>
