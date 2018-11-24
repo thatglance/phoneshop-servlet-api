@@ -6,51 +6,14 @@
 <html>
 <head>
     <title>Product Details</title>
-    <link href='http://fonts.googleapis.com/css?family=Lobster+Two' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/styles/main.css">
+    <jsp:include page="links.jsp"/>
 </head>
 <body class="product-list">
-<header>
-    <a href="${pageContext.servletContext.contextPath}">
-        <img src="${pageContext.servletContext.contextPath}/images/logo.svg"/>
-        PhoneShop
-    </a>
-</header>
+<jsp:include page="header.jsp"/>
 <main>
     <p>
         Welcome to Expert-Soft training!
     </p>
-    <%--<table>
-        <thead>
-        <tr>
-            <td>Image</td>
-            <td>
-                Description
-            </td>
-            <td class="price">
-                Price
-            </td>
-            <td>
-                Product Code
-            </td>
-        </tr>
-        </thead>
-        <tr>
-            <td>
-                <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
-            </td>
-            <td>
-                <a href="${pageContext.servletContext.contextPath}/products/${product.id}">${product.description}</a>
-            </td>
-            <td class="price">
-                <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
-            </td>
-
-            <td>
-                ${product.code}
-            </td>
-        </tr>
-    </table>--%>
     <table>
         <tr>
             <td>Image</td>

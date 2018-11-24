@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ArrayListProductDao implements ProductDao {
@@ -36,44 +37,50 @@ public class ArrayListProductDao implements ProductDao {
 
     @Override
     public synchronized List<Product> findProducts(final String query, final String sortField, final String sortMode) {
-        return productsList.stream().filter(p -> (p.getPrice() != null) && (p.getStock() > 0))
-                .filter(p -> {
-                    if (query == null) {
+
+        Comparator<Product> comparator = Comparator.comparing(Product::getId);
+
+        Predicate<Product> filter = product -> (product.getPrice() != null) && (product.getStock() > 0);
+
+        if (query != null) {
+            String[] queryParts = query.split("\\s+");
+
+            filter = filter.and(product -> {
+                for (String part : queryParts) {
+                    if (product.getDescription().contains(part)) {
                         return true;
                     }
-                    String[] queryParts = query.split(" ");
-                    for (String part : queryParts) {
-                        if (p.getDescription().contains(part)) {
-                            return true;
-                        }
+                }
+                return false;
+            });
+
+            comparator = (product1, product2) -> {
+                int coincidenceNum1 = 0, coincidenceNum2 = 0;
+                for (String part : queryParts) {
+                    if (product1.getDescription().contains(part)) {
+                        coincidenceNum1++;
                     }
-                    return false;
-                })
-                .sorted((product1, product2) -> {
-                    if (sortField != null && sortMode != null) {
-                        if (sortField.equals("description")) {
-                            return sortMode.equals("asc") ? product1.getDescription().compareTo(product2.getDescription())
-                                    : product2.getDescription().compareTo(product1.getDescription());
-                        } else if (sortField.equals("price")) {
-                            return sortMode.equals("asc") ? product1.getPrice().compareTo(product2.getPrice())
-                                    : product2.getPrice().compareTo(product1.getPrice());
-                        }
+                    if (product2.getDescription().contains(part)) {
+                        coincidenceNum2++;
                     }
-                    if(query!=null){
-                        String[] queryParts = query.split(" ");
-                        int coincidenceNum1 = 0, coincidenceNum2 = 0;
-                        for (String part : queryParts) {
-                            if (product1.getDescription().contains(part)) {
-                                coincidenceNum1++;
-                            }
-                            if (product2.getDescription().contains(part)) {
-                                coincidenceNum2++;
-                            }
-                        }
-                        return Integer.compare(coincidenceNum2, coincidenceNum1);
-                    }
-                    return 0;
-                })
+                }
+                return Integer.compare(coincidenceNum2, coincidenceNum1);
+            };
+        }
+
+        if (sortField != null && sortMode != null) {
+            if (sortField.equals("description")) {
+                comparator = Comparator.comparing(Product::getDescription);
+            } else {
+                comparator = Comparator.comparing(Product::getPrice);
+            }
+            if (sortMode.equals("desc")) {
+                comparator = comparator.reversed();
+            }
+        }
+
+        return productsList.stream().filter(filter)
+                .sorted(comparator)
                 .collect(Collectors.toList());
     }
 
