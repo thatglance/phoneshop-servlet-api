@@ -3,17 +3,16 @@ package com.es.phoneshop.model.product;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ArrayListProductDao implements ProductDao {
 
     private static volatile ArrayListProductDao instance;
-    private List<Product> productsList;
+    private List<Product> productList;
 
     private ArrayListProductDao() {
-        productsList = new ArrayList<>();
+        productList = new ArrayList<>();
     }
 
     public static ArrayListProductDao getInstance() {
@@ -32,7 +31,7 @@ public class ArrayListProductDao implements ProductDao {
 
     @Override
     public synchronized Product getProduct(final Long id) {
-        return productsList.stream().filter(p -> p.getId().equals(id)).findFirst().orElse(null);
+        return productList.stream().filter(p -> p.getId().equals(id)).findFirst().orElse(null);
     }
 
     @Override
@@ -79,7 +78,7 @@ public class ArrayListProductDao implements ProductDao {
             }
         }
 
-        return productsList.stream().filter(filter)
+        return productList.stream().filter(filter)
                 .sorted(comparator)
                 .collect(Collectors.toList());
     }
@@ -87,16 +86,12 @@ public class ArrayListProductDao implements ProductDao {
     @Override
     public synchronized void save(Product product) {
         if (getProduct(product.getId()) == null) {
-            productsList.add(product);
+            productList.add(product);
         }
     }
 
     @Override
     public synchronized void delete(Long id) {
-        for (int i = 0; i < productsList.size(); i++) {
-            if (productsList.get(i).getId().equals(id)) {
-                productsList.remove(i);
-            }
-        }
+        productList.removeIf(product -> product.getId().equals(id));
     }
 }
