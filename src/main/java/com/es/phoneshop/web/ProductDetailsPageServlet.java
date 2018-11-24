@@ -24,8 +24,18 @@ public class ProductDetailsPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uri = request.getRequestURI();
         int lastSlashIndex = uri.lastIndexOf("/");
-        String id = uri.substring(lastSlashIndex + 1);
-        request.setAttribute("product", dao.getProduct(Long.valueOf(id)));
-        request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
+        String stringId = uri.substring(lastSlashIndex + 1);
+        try {
+            Long id = Long.valueOf(stringId);
+            Product product = dao.getProduct(id);
+            if (product != null) {
+                request.setAttribute("product", product);
+                request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
+            } else {
+                throw new IllegalArgumentException("Product is not found!");
+            }
+        } catch (IllegalArgumentException e) {
+            response.sendError(404);
+        }
     }
 }
