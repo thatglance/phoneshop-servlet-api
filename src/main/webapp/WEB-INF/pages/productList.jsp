@@ -22,10 +22,13 @@
         <thead>
         <tr>
             <td>Image</td>
+            <c:url var="sortLink" value="/products">
+                <c:param name="query" value="${param.query}"/>
+            </c:url>
             <td>
                 Description
-                <a href="${pageContext.servletContext.contextPath}/products?sortField=description&sortMode=asc&query=${param.query}">asc</a>
-                <a href="${pageContext.servletContext.contextPath}/products?sortField=description&sortMode=desc&query=${param.query}">desc</a>
+                <a href="<c:url value="/products"> <c:param name="sortField" value="description"/> <c:param name="sortMode" value="asc"/> <c:param name="query" value="${param.query}"/> </c:url>">asc</a>
+                <a href="${sortLink}&sortField=description&sortMode=desc">desc</a>
             </td>
             <td class="price">
                 Price
