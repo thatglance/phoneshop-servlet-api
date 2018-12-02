@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockSettings;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.RequestDispatcher;
@@ -23,13 +24,18 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductDetailsPageServletTest {
+
     @Mock
     private static HttpServletRequest request;
+
     @Mock
     private HttpServletResponse response;
+
     @Mock
     private static RequestDispatcher requestDispatcher;
 
@@ -47,6 +53,7 @@ public class ProductDetailsPageServletTest {
         when(request.getRequestURI()).thenReturn("/1");
         servlet.init();
         servlet.doGet(request, response);
+
 
         verify(request).getRequestURI();
         verify(request).setAttribute(eq("product"), any());

@@ -11,33 +11,30 @@
 <body class="product-list">
 <jsp:include page="header.jsp"/>
 <main>
-    <p>
-        Welcome to Expert-Soft training!
-    </p>
+    <br>
+    <p>Cart: ${cart}</p>
+    <c:if test="${not empty param.message}">
+        <p class="success">${param.message}</p>
+    </c:if>
     <table>
         <tr>
-            <td>Image</td>
             <td>
                 <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
             </td>
-        </tr>
-        <tr>
-            <td>Description</td>
-            <td>${product.description}</td>
-        </tr>
-        <tr>
-            <td class="price">Price</td>
-            <td class="price">
-                <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
+            <td>
+                <h1>${product.description}</h1>
+                <p>Code: ${product.code}</p>
+                <p>Stock: ${product.stock}</p>
+                <p>Price: <fmt:formatNumber value="${product.price}" type="currency"
+                                            currencySymbol="${product.currency.symbol}"/></p>
+                <form method="post" action="${pageContext.servletContext.contextPath}/products/${product.id}">
+                    <input name="quantity" value="${not empty param.quantity ? param.quantity : 1}" class="number">
+                    <button>Add to cart</button>
+                    <c:if test="${not empty quantityError}">
+                        <p class="error">${quantityError}</p>
+                    </c:if>
+                </form>
             </td>
-        </tr>
-        <tr>
-            <td>Product Code</td>
-            <td>${product.code}</td>
-        </tr>
-        <tr>
-            <td>Product Stock</td>
-            <td>${product.stock}</td>
         </tr>
     </table>
 </main>
