@@ -1,8 +1,7 @@
 package com.es.phoneshop.model.product;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -34,53 +33,53 @@ public class ArrayListProductDao implements ProductDao {
         return productList.stream().filter(p -> p.getId().equals(id)).findFirst().orElse(null);
     }
 
+    private int matchCount(String query, Product product) {
+        String[] queryParts = query.split("\\s+");
+        int coincidenceNum = 0;
+        String description = product.getDescription();
+        for (String part : queryParts) {
+            if (description.contains(part)) {
+                coincidenceNum++;
+            }
+        }
+        return coincidenceNum;
+    }
+
+    private List<Product> sortProducts(List<Product> products, String sortField, String sortMode) {
+        Comparator<Product> comparator;
+
+        if (sortField.equals("description")) {
+            comparator = Comparator.comparing(Product::getDescription);
+        } else {
+            comparator = Comparator.comparing(Product::getPrice);
+        }
+        if (sortMode.equals("desc")) {
+            comparator = comparator.reversed();
+        }
+
+        return products.stream().sorted(comparator).collect(Collectors.toList());
+    }
+
     @Override
     public synchronized List<Product> findProducts(final String query, final String sortField, final String sortMode) {
 
-        Comparator<Product> comparator = Comparator.comparing(Product::getId);
+        Predicate<Product> baseFilter = product -> (product.getPrice() != null) && (product.getStock() > 0);
 
-        Predicate<Product> filter = product -> (product.getPrice() != null) && (product.getStock() > 0);
-
+        List<Product> foundProducts = productList.stream().filter(baseFilter).collect(Collectors.toList());
         if (query != null) {
-            String[] queryParts = query.split("\\s+");
-
-            filter = filter.and(product -> {
-                for (String part : queryParts) {
-                    if (product.getDescription().contains(part)) {
-                        return true;
-                    }
-                }
-                return false;
-            });
-
-            comparator = (product1, product2) -> {
-                int coincidenceNum1 = 0, coincidenceNum2 = 0;
-                for (String part : queryParts) {
-                    if (product1.getDescription().contains(part)) {
-                        coincidenceNum1++;
-                    }
-                    if (product2.getDescription().contains(part)) {
-                        coincidenceNum2++;
-                    }
-                }
-                return Integer.compare(coincidenceNum2, coincidenceNum1);
-            };
+            foundProducts = foundProducts.stream()
+                    .collect(Collectors.toMap(Function.identity(), product -> matchCount(query, product)))
+                    .entrySet().stream().filter(entry -> entry.getValue() > 0)
+                    .sorted(Comparator.comparing(Map.Entry<Product, Integer>::getValue).reversed())
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
         }
 
         if (sortField != null && sortMode != null) {
-            if (sortField.equals("description")) {
-                comparator = Comparator.comparing(Product::getDescription);
-            } else {
-                comparator = Comparator.comparing(Product::getPrice);
-            }
-            if (sortMode.equals("desc")) {
-                comparator = comparator.reversed();
-            }
+            return sortProducts(foundProducts, sortField, sortMode);
+        }else {
+            return foundProducts;
         }
-
-        return productList.stream().filter(filter)
-                .sorted(comparator)
-                .collect(Collectors.toList());
     }
 
     @Override
