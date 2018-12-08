@@ -1,41 +1,73 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.product.ArrayListProductDao;
-import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.exception.NotEnoughStockException;
+import com.es.phoneshop.model.product.*;
+import com.es.phoneshop.model.cart.Cart;
+import com.es.phoneshop.model.cart.CartService;
+import com.es.phoneshop.model.cart.CartServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.Currency;
 
 public class ProductDetailsPageServlet extends HttpServlet {
-    private ArrayListProductDao dao;
+
+    //private ArrayListProductDao dao;
+    private ProductDaoService productDaoService;
+    private CartService cartService;
+    private ViewedProductListService viewedProductListService;
 
     @Override
     public void init() throws ServletException {
         super.init();
-        dao = ArrayListProductDao.getInstance();
+
+        //dao = ArrayListProductDao.getInstance();
+        cartService = CartServiceImpl.getInstance();
+        productDaoService = ProductDaoServiceImpl.getInstance();
+        viewedProductListService = ViewedProductListServiceImpl.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String uri = request.getRequestURI();
-        int lastSlashIndex = uri.lastIndexOf("/");
-        String stringId = uri.substring(lastSlashIndex + 1);
         try {
-            Long id = Long.valueOf(stringId);
-            Product product = dao.getProduct(id);
+            Product product = productDaoService.loadProduct(request);
             if (product != null) {
+                ViewedProductList viewedProductList = viewedProductListService.getViewedProductList(request.getSession());
+                viewedProductListService.addViewedProduct(viewedProductList, product);
+                request.setAttribute("viewedProductList", viewedProductList.getViewedProducts());
+
                 request.setAttribute("product", product);
+                request.setAttribute("cart", cartService.getCart(request.getSession()).getCartItems());
                 request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
             } else {
-                throw new IllegalArgumentException("Product is not found!");
+                response.sendError(404);
             }
-        } catch (IllegalArgumentException e) {
+        } catch (NumberFormatException e) {
             response.sendError(404);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Product product = productDaoService.loadProduct(request);
+        request.setAttribute("product", product);
+
+        Cart cart = cartService.getCart(request.getSession());
+        request.setAttribute("cart", cart.getCartItems());
+
+        String quantityString = request.getParameter("quantity");
+
+        try {
+            cartService.addToCart(cart, product, quantityString);
+            response.sendRedirect(request.getRequestURI() + "?message=Product is added successfully.");
+        } catch (NumberFormatException e) {
+            request.setAttribute("quantityError", "Not a number.");
+            request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
+        } catch (NotEnoughStockException e) {
+            request.setAttribute("quantityError", e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
         }
     }
 }
