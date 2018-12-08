@@ -1,9 +1,13 @@
 package com.es.phoneshop.web;
 
+import com.es.phoneshop.model.exception.NotEnoughStockException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.product.cart.CartService;
-import com.es.phoneshop.model.product.cart.CartServiceImpl;
+import com.es.phoneshop.model.cart.Cart;
+import com.es.phoneshop.model.cart.CartService;
+import com.es.phoneshop.model.cart.CartServiceImpl;
+import com.es.phoneshop.model.product.ProductDaoService;
+import com.es.phoneshop.model.product.ProductDaoServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,67 +17,54 @@ import java.io.IOException;
 
 public class ProductDetailsPageServlet extends HttpServlet {
 
-    private ArrayListProductDao dao;
+    //private ArrayListProductDao dao;
     private CartService cartService;
+    private ProductDaoService productDaoService;
 
     @Override
     public void init() throws ServletException {
         super.init();
 
-        dao = ArrayListProductDao.getInstance();
+        //dao = ArrayListProductDao.getInstance();
         cartService = CartServiceImpl.getInstance();
+        productDaoService = ProductDaoServiceImpl.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         try {
-            Product product = loadProduct(request);
+            Product product = productDaoService.loadProduct(request);
             if (product != null) {
                 request.setAttribute("product", product);
                 request.setAttribute("cart", cartService.getCart(request.getSession()).getCartItems());
                 request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
             } else {
-                throw new IllegalArgumentException("Product is not found!");
+                response.sendError(404);
             }
-        } catch (IllegalArgumentException e) {
+        } catch (NumberFormatException e) {
             response.sendError(404);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Product product = loadProduct(request);
+        Product product = productDaoService.loadProduct(request);
         request.setAttribute("product", product);
 
-        request.setAttribute("cart", cartService.getCart(request.getSession()).getCartItems());
+        Cart cart = cartService.getCart(request.getSession());
+        request.setAttribute("cart", cart.getCartItems());
 
-        Integer quantity = null;
+        String quantityString = request.getParameter("quantity");
+
         try {
-            String quantityString = request.getParameter("quantity");
-            quantity = Integer.valueOf(quantityString);
+            cartService.addToCart(cart, product, quantityString);
+            response.sendRedirect(request.getRequestURI() + "?message=Product is added successfully.");
         } catch (NumberFormatException e) {
             request.setAttribute("quantityError", "Not a number.");
-        }
-        if (quantity != null && quantity <= product.getStock()) {
-                cartService.addToCart(cartService.getCart(request.getSession()), product, quantity);
-                //request.setAttribute("message", "Product is added successfully.");
-
-                response.sendRedirect(request.getRequestURI() + "?message=Product is added successfully.");
-        } else {
-            if (quantity != null){
-                request.setAttribute("quantityError", "Not enough stock.");
-            }
+            request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
+        } catch (NotEnoughStockException e) {
+            request.setAttribute("quantityError", e.getMessage());
             request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
         }
-    }
-
-    private Product loadProduct(HttpServletRequest request) {
-        StringBuffer uri = request.getRequestURL();
-        int lastSlashIndex = uri.lastIndexOf("/");
-        String stringId = uri.substring(lastSlashIndex + 1);
-        Long id = Long.valueOf(stringId);
-
-        return dao.getProduct(id);
     }
 }

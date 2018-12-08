@@ -1,5 +1,6 @@
-package com.es.phoneshop.model.product.cart;
+package com.es.phoneshop.model.cart;
 
+import com.es.phoneshop.model.exception.NotEnoughStockException;
 import com.es.phoneshop.model.product.Product;
 
 import javax.servlet.http.HttpSession;
@@ -10,10 +11,8 @@ public class CartServiceImpl implements CartService {
     private static final String CART_ATTRIBUTE = "cart";
 
     private static volatile CartServiceImpl instance;
-    //private Cart cart;
 
     private CartServiceImpl() {
-        //cart = new Cart();
     }
 
     public static CartServiceImpl getInstance() {
@@ -41,13 +40,23 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void addToCart(Cart cart, Product product, Integer quantity) {
+    public void addToCart(Cart cart, Product product, String quantityString)
+            throws NumberFormatException, NotEnoughStockException {
+        int quantity = Integer.valueOf(quantityString);
+
         Optional<CartItem> cartItemOptional = cart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getProduct().getId().equals(product.getId())).findAny();
         if (cartItemOptional.isPresent()) {
             CartItem cartItem = cartItemOptional.get();
+            if (cartItem.getQuantity() + quantity > product.getStock()) {
+                throw new NotEnoughStockException("Not enough stock of product " + product.getCode() +
+                        " for result quantity.");
+            }
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
         } else {
+            if (quantity > product.getStock()) {
+                throw new NotEnoughStockException("Not enough stock of product " + product.getCode() + ".");
+            }
             cart.getCartItems().add(new CartItem(product, quantity));
         }
     }

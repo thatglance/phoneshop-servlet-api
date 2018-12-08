@@ -32,3 +32,16 @@ td {
 .error {
   color: red;
 }
+
+.hr {
+  color: #8f03cb;
+}
+.outer-div {
+  display: flex;
+}
+.inner-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}

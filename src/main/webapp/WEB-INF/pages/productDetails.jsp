@@ -7,8 +7,31 @@
 <head>
     <title>Product Details</title>
     <jsp:include page="links.jsp"/>
+    <style type="text/css">
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+        .hr {
+             color: #8f03cb;
+         }
+        .outer-div {
+            display: flex;
+        }
+        .inner-div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .inner-div  img {
+            max-width: 64px;
+        }
+    </style>
 </head>
-<body class="product-list">
+<body>
 <jsp:include page="header.jsp"/>
 <main>
     <br>
@@ -38,5 +61,30 @@
         </tr>
     </table>
 </main>
+<hr class="hr">
+<h3>Recently viewed</h3>
+<div class="outer-div">
+    <div class="inner-div">
+        <div>
+            <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
+        </div>
+        <div>${product.description}</div>
+        <div>${product.price}</div>
+    </div>
+    <div class="inner-div">
+        <div>
+            <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
+        </div>
+        <div>${product.description}</div>
+        <div>${product.price}</div>
+    </div>
+    <div class="inner-div">
+        <div>
+            <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
+        </div>
+        <div>${product.description}</div>
+        <div>${product.price}</div>
+    </div>
+</div>
 </body>
 </html>
