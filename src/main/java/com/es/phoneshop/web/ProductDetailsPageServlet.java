@@ -1,13 +1,10 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.exception.NotEnoughStockException;
-import com.es.phoneshop.model.product.ArrayListProductDao;
-import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.product.*;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.CartServiceImpl;
-import com.es.phoneshop.model.product.ProductDaoService;
-import com.es.phoneshop.model.product.ProductDaoServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,8 +15,9 @@ import java.io.IOException;
 public class ProductDetailsPageServlet extends HttpServlet {
 
     //private ArrayListProductDao dao;
-    private CartService cartService;
     private ProductDaoService productDaoService;
+    private CartService cartService;
+    private ViewedProductListService viewedProductListService;
 
     @Override
     public void init() throws ServletException {
@@ -28,6 +26,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         //dao = ArrayListProductDao.getInstance();
         cartService = CartServiceImpl.getInstance();
         productDaoService = ProductDaoServiceImpl.getInstance();
+        viewedProductListService = ViewedProductListServiceImpl.getInstance();
     }
 
     @Override
@@ -35,6 +34,10 @@ public class ProductDetailsPageServlet extends HttpServlet {
         try {
             Product product = productDaoService.loadProduct(request);
             if (product != null) {
+                ViewedProductList viewedProductList = viewedProductListService.getViewedProductList(request.getSession());
+                viewedProductListService.addViewedProduct(viewedProductList, product);
+                request.setAttribute("viewedProductList", viewedProductList.getViewedProducts());
+
                 request.setAttribute("product", product);
                 request.setAttribute("cart", cartService.getCart(request.getSession()).getCartItems());
                 request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
