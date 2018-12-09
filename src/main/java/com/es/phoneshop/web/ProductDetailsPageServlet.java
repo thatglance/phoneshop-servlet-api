@@ -14,7 +14,6 @@ import java.io.IOException;
 
 public class ProductDetailsPageServlet extends HttpServlet {
 
-    //private ArrayListProductDao dao;
     private ProductDaoService productDaoService;
     private CartService cartService;
     private ViewedProductListService viewedProductListService;
@@ -23,7 +22,6 @@ public class ProductDetailsPageServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
 
-        //dao = ArrayListProductDao.getInstance();
         cartService = CartServiceImpl.getInstance();
         productDaoService = ProductDaoServiceImpl.getInstance();
         viewedProductListService = ViewedProductListServiceImpl.getInstance();
@@ -56,6 +54,9 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
         Cart cart = cartService.getCart(request.getSession());
         request.setAttribute("cart", cart.getCartItems());
+
+        ViewedProductList viewedProductList = viewedProductListService.getViewedProductList(request.getSession());
+        request.setAttribute("viewedProductList", viewedProductList.getViewedProducts());
 
         String quantityString = request.getParameter("quantity");
 

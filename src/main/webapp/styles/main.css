@@ -34,7 +34,9 @@ td {
 }
 
 .hr {
-  color: #8f03cb;
+  color: aquamarine;
+  height: 5px;
+  background-color: aquamarine
 }
 .outer-div {
   display: flex;

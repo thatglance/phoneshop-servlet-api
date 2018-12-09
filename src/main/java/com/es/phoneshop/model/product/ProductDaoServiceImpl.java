@@ -33,4 +33,11 @@ public class ProductDaoServiceImpl implements ProductDaoService {
 
         return dao.getProduct(id);
     }
+
+    @Override
+    public Product loadProductById(String idString) {
+        Long id = Long.valueOf(idString);
+
+        return dao.getProduct(id);
+    }
 }

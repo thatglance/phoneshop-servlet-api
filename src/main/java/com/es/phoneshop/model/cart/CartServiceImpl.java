@@ -4,6 +4,7 @@ import com.es.phoneshop.model.exception.NotEnoughStockException;
 import com.es.phoneshop.model.product.Product;
 
 import javax.servlet.http.HttpSession;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class CartServiceImpl implements CartService {
@@ -43,9 +44,10 @@ public class CartServiceImpl implements CartService {
     public void addToCart(Cart cart, Product product, String quantityString)
             throws NumberFormatException, NotEnoughStockException {
         int quantity = Integer.valueOf(quantityString);
+        Long productId = product.getId();
 
         Optional<CartItem> cartItemOptional = cart.getCartItems().stream()
-                .filter(cartItem -> cartItem.getProduct().getId().equals(product.getId())).findAny();
+                .filter(cartItem -> cartItem.getProduct().getId().equals(productId)).findAny();
         if (cartItemOptional.isPresent()) {
             CartItem cartItem = cartItemOptional.get();
             if (cartItem.getQuantity() + quantity > product.getStock()) {
@@ -61,4 +63,28 @@ public class CartServiceImpl implements CartService {
         }
     }
 
+    @Override
+    public void updateCart(Cart cart, Product product, String quantityString)
+            throws NumberFormatException, NotEnoughStockException, NoSuchElementException {
+
+        int quantity = Integer.valueOf(quantityString);
+        Long productId = product.getId();
+
+        Optional<CartItem> cartItemOptional = cart.getCartItems().stream()
+                .filter(cartItem -> cartItem.getProduct().getId().equals(productId)).findAny();
+
+        if (cartItemOptional.isPresent()) {
+            if (quantity > product.getStock()) {
+                throw new NotEnoughStockException("Not enough stock of product " + product.getCode() + ".");
+            }
+            cartItemOptional.get().setQuantity(quantity);
+        } else {
+            throw new NoSuchElementException("No product " + product.getCode() + " in cart.");
+        }
+    }
+
+    @Override
+    public void delete(Cart cart, Product product) {
+        cart.getCartItems().removeIf(cartItem -> product.equals(cartItem.getProduct()));
+    }
 }

@@ -1,16 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <jsp:useBean id="products" type="java.util.ArrayList" scope="request"/>
-<html>
-<head>
-    <title>Product List</title>
-    <jsp:include page="links.jsp"/>
-</head>
-<body class="product-list">
-<jsp:include page="header.jsp"/>
-<main>
+<tags:master pageTitle="Product list" pageClass="product-list">
     <p>
         Welcome to Expert-Soft training!
     </p>
@@ -49,6 +43,4 @@
             </tr>
         </c:forEach>
     </table>
-</main>
-</body>
-</html>
+</tags:master>
