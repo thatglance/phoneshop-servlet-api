@@ -2,21 +2,21 @@ package com.es.phoneshop.model.product;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class ProductDaoServiceImpl implements ProductDaoService {
-    private static volatile ProductDaoServiceImpl instance;
+public class ProductServiceImpl implements ProductService {
+    private static volatile ProductServiceImpl instance;
     private ProductDao dao;
 
-    private ProductDaoServiceImpl() {
+    private ProductServiceImpl() {
         dao = ArrayListProductDao.getInstance();
     }
 
-    public static ProductDaoServiceImpl getInstance() {
-        ProductDaoServiceImpl tempInstance = instance;
+    public static ProductServiceImpl getInstance() {
+        ProductServiceImpl tempInstance = instance;
         if (tempInstance == null){
-            synchronized (ProductDaoServiceImpl.class){
+            synchronized (ProductServiceImpl.class){
                 tempInstance = instance;
                 if (tempInstance == null){
-                    instance = tempInstance = new ProductDaoServiceImpl();
+                    instance = tempInstance = new ProductServiceImpl();
                 }
             }
         }
@@ -30,6 +30,13 @@ public class ProductDaoServiceImpl implements ProductDaoService {
         int lastSlashIndex = uri.lastIndexOf("/");
         String stringId = uri.substring(lastSlashIndex + 1);
         Long id = Long.valueOf(stringId);
+
+        return dao.getProduct(id);
+    }
+
+    @Override
+    public Product loadProductById(String idString) {
+        Long id = Long.valueOf(idString);
 
         return dao.getProduct(id);
     }

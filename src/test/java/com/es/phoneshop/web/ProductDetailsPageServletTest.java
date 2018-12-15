@@ -38,7 +38,7 @@ public class ProductDetailsPageServletTest {
     @Mock
     private Product product;
     @Mock
-    private ProductDaoService productDaoService;
+    private ProductService productService;
     @Mock
     private CartService cartService;
     @Mock
@@ -62,7 +62,7 @@ public class ProductDetailsPageServletTest {
 
     @Test
     public void testDoGet() throws ServletException, IOException {
-        when(productDaoService.loadProduct(request)).thenReturn(product);
+        when(productService.loadProduct(request)).thenReturn(product);
         servlet.doGet(request, response);
 
         verify(request).setAttribute(eq("viewedProductList"), any());
@@ -74,7 +74,7 @@ public class ProductDetailsPageServletTest {
 
     @Test
     public void testDoGetProductNotFound() throws ServletException, IOException {
-        when(productDaoService.loadProduct(request)).thenReturn(null);
+        when(productService.loadProduct(request)).thenReturn(null);
         servlet.doGet(request, response);
 
         verify(response).sendError(404);
@@ -82,7 +82,7 @@ public class ProductDetailsPageServletTest {
 
     @Test
     public void testDoPost() throws ServletException, IOException {
-        when(productDaoService.loadProduct(request)).thenReturn(product);
+        when(productService.loadProduct(request)).thenReturn(product);
         when(request.getParameter(eq("quantity"))).thenReturn("1");
         servlet.doPost(request, response);
 
@@ -93,8 +93,8 @@ public class ProductDetailsPageServletTest {
     }
 
     @Test
-    public void testDoPostotEnoughStock() throws ServletException, IOException {
-        when(productDaoService.loadProduct(request)).thenReturn(product);
+    public void testDoPostNotEnoughStock() throws ServletException, IOException {
+        when(productService.loadProduct(request)).thenReturn(product);
         when(request.getParameter(eq("quantity"))).thenReturn("khgfkhf");
         doThrow(new NotEnoughStockException("test")).when(cartService).addToCart(any(), any(), anyString());
         servlet.doPost(request, response);
@@ -107,7 +107,7 @@ public class ProductDetailsPageServletTest {
 
     @Test
     public void testDoPostNumberFormat() throws ServletException, IOException {
-        when(productDaoService.loadProduct(request)).thenReturn(product);
+        when(productService.loadProduct(request)).thenReturn(product);
         when(request.getParameter(eq("quantity"))).thenReturn("khgfkhf");
         doThrow(new NumberFormatException("test")).when(cartService).addToCart(any(), any(), anyString());
         servlet.doPost(request, response);
