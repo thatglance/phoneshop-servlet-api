@@ -7,11 +7,7 @@
 <jsp:useBean id="viewedProductList" type="java.util.List" scope="request"/>
 
 <tags:master pageTitle="${product.description}">
-    <br>
     <p>Cart: ${cart}</p>
-    <c:if test="${not empty param.message}">
-        <p class="success">${param.message}</p>
-    </c:if>
     <table>
         <tr>
             <td>
@@ -28,6 +24,9 @@
                     <button>Add to cart</button>
                     <c:if test="${not empty quantityError}">
                         <p class="error">${quantityError}</p>
+                    </c:if>
+                    <c:if test="${not empty param.message}">
+                        <p class="success">${param.message}</p>
                     </c:if>
                 </form>
             </td>

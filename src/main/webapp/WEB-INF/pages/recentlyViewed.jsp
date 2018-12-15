@@ -1,8 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="viewedProductList" type="java.util.List" scope="request"/>
 
-<%--<hr class="hr">--%>
-<hr style="color: aquamarine; height: 5px; background-color: aquamarine">
+<hr class="hr">
+<%--<hr style="color: aquamarine; height: 5px; background-color: aquamarine">--%>
 <h3>Recently viewed</h3>
 <div class="outer-div">
 <%--<div style="display: flex">--%>

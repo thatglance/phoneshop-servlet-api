@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class ProductDetailsPageServlet extends HttpServlet {
 
-    private ProductDaoService productDaoService;
+    private ProductService productService;
     private CartService cartService;
     private ViewedProductListService viewedProductListService;
 
@@ -23,14 +23,14 @@ public class ProductDetailsPageServlet extends HttpServlet {
         super.init();
 
         cartService = CartServiceImpl.getInstance();
-        productDaoService = ProductDaoServiceImpl.getInstance();
+        productService = ProductServiceImpl.getInstance();
         viewedProductListService = ViewedProductListServiceImpl.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            Product product = productDaoService.loadProduct(request);
+            Product product = productService.loadProduct(request);
             if (product != null) {
                 ViewedProductList viewedProductList = viewedProductListService.getViewedProductList(request.getSession());
                 viewedProductListService.addViewedProduct(viewedProductList, product);
@@ -49,7 +49,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Product product = productDaoService.loadProduct(request);
+        Product product = productService.loadProduct(request);
         request.setAttribute("product", product);
 
         Cart cart = cartService.getCart(request.getSession());

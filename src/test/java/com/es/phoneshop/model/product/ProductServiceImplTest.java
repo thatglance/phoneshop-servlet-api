@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProductDaoServiceImplTest {
+public class ProductServiceImplTest {
     @Mock
     private ProductDao dao;
     @Mock
@@ -21,7 +21,7 @@ public class ProductDaoServiceImplTest {
     private HttpServletRequest request;
 
     @InjectMocks
-    private ProductDaoServiceImpl productDaoService;
+    private ProductServiceImpl productDaoService;
 
     @Test
     public void loadProductTest() throws NumberFormatException {

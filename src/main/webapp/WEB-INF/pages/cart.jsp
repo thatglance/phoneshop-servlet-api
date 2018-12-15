@@ -5,17 +5,16 @@
 
 <tags:master pageTitle="Cart" pageClass="product-list">
     <jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="request"/>
-    <br>
     <c:if test="${not empty param.message}">
         <p class="success">${param.message}</p>
+    </c:if>
+    <c:if test="${not empty quantityErrors}">
+        <p class="error">Failed to update cart.</p>
     </c:if>
     <form method="post" action="${pageContext.servletContext.contextPath}/cart">
         <p>
             <button>Update cart</button>
         </p>
-        <c:if test="${not empty quantityErrors}">
-            <p class="error">Failed to update cart.</p>
-        </c:if>
         <table>
             <tr>
                 <td></td>
@@ -54,3 +53,6 @@
         </p>
     </form>
 </tags:master>
+<%--добавить кнопку перехода на карту(в хедере, чтобы на всех страницах была)
+
+--%>

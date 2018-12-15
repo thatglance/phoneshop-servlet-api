@@ -17,14 +17,14 @@ import java.util.NoSuchElementException;
 
 public class CartPageServlet extends HttpServlet {
     private CartService cartService;
-    private ProductDao productDao;
+    private ProductService productService;
 
     @Override
     public void init() throws ServletException {
         super.init();
 
         cartService = CartServiceImpl.getInstance();
-        productDao = ArrayListProductDao.getInstance();
+        productService = ProductServiceImpl.getInstance();
     }
 
     @Override
@@ -42,20 +42,25 @@ public class CartPageServlet extends HttpServlet {
 
         int productIdsNum = (productIds == null ? 0 : productIds.length);
         for (int i = 0; i < productIdsNum; i++) {
-            Long id = Long.valueOf(productIds[i]);
-            Product product = productDao.getProduct(id);
+            Product product = productService.loadProductById(productIds[i]);
             try {
                 cartService.updateCart(cart, product, quantities[i]);
             } catch (NumberFormatException e) {
                 quantityErrors.put(product.getId(), "Not a number.");
-            } catch (NotEnoughStockException | NoSuchElementException e) {
+            } catch (NotEnoughStockException | NoSuchElementException | IllegalArgumentException e) {
                 quantityErrors.put(product.getId(), e.getMessage());
             }
         }
         request.setAttribute("quantityErrors", quantityErrors);
 
         if (quantityErrors.isEmpty()) {
-            response.sendRedirect(request.getRequestURI() + "?message=Cart updated successfully.");
+            String message;
+            if (!cart.getCartItems().isEmpty()) {
+                message = "?message=Cart updated successfully.";
+            } else {
+                message = "?message=Cart is empty.";
+            }
+            response.sendRedirect(request.getRequestURI() + message);
         } else {
             request.setAttribute("cart", cart);
             request.getRequestDispatcher("/WEB-INF/pages/cart.jsp").forward(request, response);

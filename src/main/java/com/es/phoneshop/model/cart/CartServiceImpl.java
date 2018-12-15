@@ -65,9 +65,13 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void updateCart(Cart cart, Product product, String quantityString)
-            throws NumberFormatException, NotEnoughStockException, NoSuchElementException {
+            throws NotEnoughStockException, NoSuchElementException, IllegalArgumentException {
 
         int quantity = Integer.valueOf(quantityString);
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive.");
+        }
+
         Long productId = product.getId();
 
         Optional<CartItem> cartItemOptional = cart.getCartItems().stream()

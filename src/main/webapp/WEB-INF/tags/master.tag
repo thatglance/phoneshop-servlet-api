@@ -14,6 +14,10 @@
     </a>
 </header>
 <main>
+    <br>
+    <form method="get" action="${pageContext.servletContext.contextPath}/cart">
+        <button>Go to cart</button>
+    </form>
     <jsp:doBody/>
 </main>
 </body>
