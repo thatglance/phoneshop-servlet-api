@@ -8,6 +8,9 @@
     <c:if test="${not empty param.message}">
         <p class="success">${param.message}</p>
     </c:if>
+    <c:if test="${cart.cartItems.size()==0}">
+        <p class="success">Cart is empty.</p>
+    </c:if>
     <c:if test="${not empty quantityErrors}">
         <p class="error">Failed to update cart.</p>
     </c:if>
@@ -47,12 +50,22 @@
                     </td>
                 </tr>
             </c:forEach>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Total:</td>
+                <td>
+                    <fmt:formatNumber value="${cart.totalPrice}" type="currency" currencySymbol="${cart.currency.symbol}"/>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
         </table>
         <p>
             <button>Update cart</button>
         </p>
+        <p>
+            <a href="${pageContext.servletContext.contextPath}/checkout">Checkout</a>
+        </p>
     </form>
 </tags:master>
-<%--добавить кнопку перехода на карту(в хедере, чтобы на всех страницах была)
-
---%>

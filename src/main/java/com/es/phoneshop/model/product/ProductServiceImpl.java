@@ -31,13 +31,13 @@ public class ProductServiceImpl implements ProductService {
         String stringId = uri.substring(lastSlashIndex + 1);
         Long id = Long.valueOf(stringId);
 
-        return dao.getProduct(id);
+        return dao.get(id);
     }
 
     @Override
     public Product loadProductById(String idString) {
         Long id = Long.valueOf(idString);
 
-        return dao.getProduct(id);
+        return dao.get(id);
     }
 }

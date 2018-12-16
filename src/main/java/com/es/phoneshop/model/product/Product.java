@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Currency;
 
-public class Product implements Serializable {
+public class Product implements Serializable, Cloneable {
     private Long id;
     private String code;
     private String description;
@@ -30,6 +30,23 @@ public class Product implements Serializable {
         this.currency = currency;
         this.stock = stock;
         this.imageUrl = imageUrl;
+    }
+
+//    public Product(Product otherProduct) {
+//        this.id = new Long(otherProduct.getId().longValue());
+//        this.price = new BigDecimal(otherProduct.getPrice().toString());
+//        this.currency = Currency.getInstance(otherProduct.getCurrency().getCurrencyCode());
+//
+//        //this.code =
+//    }
+
+    @Override
+    public Product clone() throws CloneNotSupportedException {
+        Product clone = (Product) super.clone();
+        clone.id = new Long(this.id.longValue());
+        clone.price = new BigDecimal(this.price.toString());
+        clone.currency = Currency.getInstance(this.currency.getCurrencyCode());
+        return clone;
     }
 
     public Long getId() {
@@ -96,7 +113,7 @@ public class Product implements Serializable {
         if (object == null || object.getClass() != this.getClass()) {
             return false;
         }
-        Product product = (Product)object;
+        Product product = (Product) object;
         return id.equals(product.id)
                 && code.equals(product.code)
                 && description.equals(product.description)

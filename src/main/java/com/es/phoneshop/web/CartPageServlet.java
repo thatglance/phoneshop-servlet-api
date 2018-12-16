@@ -54,12 +54,12 @@ public class CartPageServlet extends HttpServlet {
         request.setAttribute("quantityErrors", quantityErrors);
 
         if (quantityErrors.isEmpty()) {
-            String message;
-            if (!cart.getCartItems().isEmpty()) {
-                message = "?message=Cart updated successfully.";
-            } else {
-                message = "?message=Cart is empty.";
-            }
+            String message = "?message=Cart updated successfully.";
+//            if (!cart.getCartItems().isEmpty()) {
+//                message = "?message=Cart updated successfully.";
+//            } else {
+//                message = "?message=Cart is empty.";
+//            }
             response.sendRedirect(request.getRequestURI() + message);
         } else {
             request.setAttribute("cart", cart);

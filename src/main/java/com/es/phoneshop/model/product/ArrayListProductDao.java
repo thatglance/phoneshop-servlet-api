@@ -29,7 +29,7 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public synchronized Product getProduct(final Long id) {
+    public synchronized Product get(final Long id) {
         return productList.stream().filter(p -> p.getId().equals(id)).findFirst().orElse(null);
     }
 
@@ -84,7 +84,7 @@ public class ArrayListProductDao implements ProductDao {
 
     @Override
     public synchronized void save(Product product) {
-        if (getProduct(product.getId()) == null) {
+        if (get(product.getId()) == null) {
             productList.add(product);
         }
     }
