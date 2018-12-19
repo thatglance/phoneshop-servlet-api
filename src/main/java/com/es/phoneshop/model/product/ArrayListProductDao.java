@@ -5,32 +5,27 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class ArrayListProductDao implements ProductDao {
+public class ArrayListProductDao<T extends Product> extends ProductDao<T> {
 
-    private static volatile ArrayListProductDao instance;
-    private List<Product> productList;
+    private static volatile ArrayListProductDao<Product> instance;
+    //private List<Product> productList;
 
     private ArrayListProductDao() {
-        productList = new ArrayList<>();
+     //   productList = new ArrayList<>();
     }
 
-    public static ArrayListProductDao getInstance() {
-        ArrayListProductDao tempInstance = instance;
+    public static ArrayListProductDao<Product> getInstance() {
+        ArrayListProductDao<Product> tempInstance = instance;
         if (tempInstance == null) {
             synchronized (ArrayListProductDao.class) {
                 tempInstance = instance;
                 if (tempInstance == null) {
-                    instance = tempInstance = new ArrayListProductDao();
+                    instance = tempInstance = new ArrayListProductDao<>();
                 }
             }
         }
 
         return tempInstance;
-    }
-
-    @Override
-    public synchronized Product getProduct(final Long id) {
-        return productList.stream().filter(p -> p.getId().equals(id)).findFirst().orElse(null);
     }
 
     private int matchCount(String query, Product product) {
@@ -45,13 +40,13 @@ public class ArrayListProductDao implements ProductDao {
         return coincidenceNum;
     }
 
-    private List<Product> sortProducts(List<Product> products, String sortField, String sortMode) {
-        Comparator<Product> comparator;
+    private List<T> sortProducts(List<T> products, String sortField, String sortMode) {
+        Comparator<T> comparator;
 
         if (sortField.equals("description")) {
-            comparator = Comparator.comparing(Product::getDescription);
+            comparator = Comparator.comparing(T::getDescription);
         } else {
-            comparator = Comparator.comparing(Product::getPrice);
+            comparator = Comparator.comparing(T::getPrice);
         }
         if (sortMode.equals("desc")) {
             comparator = comparator.reversed();
@@ -61,16 +56,16 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public synchronized List<Product> findProducts(final String query, final String sortField, final String sortMode) {
+    public synchronized List<T> findProducts(final String query, final String sortField, final String sortMode) {
 
         Predicate<Product> baseFilter = product -> (product.getPrice() != null) && (product.getStock() > 0);
 
-        List<Product> foundProducts = productList.stream().filter(baseFilter).collect(Collectors.toList());
+        List<T> foundProducts = entities.stream().filter(baseFilter).collect(Collectors.toList());
         if (query != null) {
             foundProducts = foundProducts.stream()
                     .collect(Collectors.toMap(Function.identity(), product -> matchCount(query, product)))
                     .entrySet().stream().filter(entry -> entry.getValue() > 0)
-                    .sorted(Comparator.comparing(Map.Entry<Product, Integer>::getValue).reversed())
+                    .sorted(Comparator.comparing(Map.Entry<T, Integer>::getValue).reversed())
                     .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
         }
@@ -80,17 +75,5 @@ public class ArrayListProductDao implements ProductDao {
         }else {
             return foundProducts;
         }
-    }
-
-    @Override
-    public synchronized void save(Product product) {
-        if (getProduct(product.getId()) == null) {
-            productList.add(product);
-        }
-    }
-
-    @Override
-    public synchronized void delete(Long id) {
-        productList.removeIf(product -> product.getId().equals(id));
     }
 }

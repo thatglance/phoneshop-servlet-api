@@ -1,5 +1,8 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ attribute name="pageTitle" type="java.lang.String" required="true" %>
 <%@ attribute name="pageClass" type="java.lang.String" required="false" %>
+<%@ attribute name="showMiniCart" type="java.lang.String" required="false" %>
+<jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="request"/>
 <html>
 <head>
     <title>${pageTitle}</title>
@@ -12,12 +15,15 @@
         <%--<img src="${pageContext.servletContext.contextPath}/images/logo.svg"/>--%>
         PhoneShop
     </a>
+    <c:if test="${showMiniCart eq 'yes'}">
+        <a href="${pageContext.servletContext.contextPath}/cart">Cart: ${cart.totalPrice}</a>
+    </c:if>
 </header>
 <main>
-    <br>
-    <form method="get" action="${pageContext.servletContext.contextPath}/cart">
+    <%--<br>
+    <form method="getEntity" action="${pageContext.servletContext.contextPath}/cart">
         <button>Go to cart</button>
-    </form>
+    </form>--%>
     <jsp:doBody/>
 </main>
 </body>

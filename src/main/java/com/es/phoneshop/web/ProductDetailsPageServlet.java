@@ -37,7 +37,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
                 request.setAttribute("viewedProductList", viewedProductList.getViewedProducts());
 
                 request.setAttribute("product", product);
-                request.setAttribute("cart", cartService.getCart(request.getSession()).getCartItems());
+                request.setAttribute("cart", cartService.getCart(request.getSession()));//.getCartItems());
                 request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
             } else {
                 response.sendError(404);

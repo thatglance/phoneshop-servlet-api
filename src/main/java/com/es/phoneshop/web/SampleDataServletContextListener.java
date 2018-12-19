@@ -14,7 +14,7 @@ public class SampleDataServletContextListener implements ServletContextListener 
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         String insertSampleData = servletContextEvent.getServletContext().getInitParameter("insertSampleData");
         if (Boolean.valueOf(insertSampleData)) {
-            ArrayListProductDao dao = ArrayListProductDao.getInstance();
+            ArrayListProductDao<Product> dao = ArrayListProductDao.getInstance();
             Currency usd = Currency.getInstance("USD");
             dao.save(new Product(1L, "sgs", "Samsung Galaxy S II", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg"));
             dao.save(new Product(2L, "sgs2", "Samsung Galaxy S II", new BigDecimal(200), usd, 0, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20II.jpg"));

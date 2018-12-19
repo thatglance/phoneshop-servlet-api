@@ -1,11 +1,13 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.model.entity.Entity;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Currency;
 
-public class Product implements Serializable {
-    private Long id;
+public class Product extends Entity implements Serializable {
+    //private Long id;
     private String code;
     private String description;
     /**
@@ -23,7 +25,8 @@ public class Product implements Serializable {
     }
 
     public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
-        this.id = id;
+        //this.id = id;
+        super(id);
         this.code = code;
         this.description = description;
         this.price = price;
@@ -32,13 +35,13 @@ public class Product implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public Long getId() {
-        return id;
-    }
+//    public Long getId() {
+//        return id;
+//    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
 
     public String getCode() {
         return code;
@@ -96,8 +99,8 @@ public class Product implements Serializable {
         if (object == null || object.getClass() != this.getClass()) {
             return false;
         }
-        Product product = (Product)object;
-        return id.equals(product.id)
+        Product product = (Product) object;
+        return this.getId().equals(product.getId())
                 && code.equals(product.code)
                 && description.equals(product.description)
                 && price.equals(product.price)

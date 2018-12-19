@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class ProductServiceImpl implements ProductService {
     private static volatile ProductServiceImpl instance;
-    private ProductDao dao;
+    private ProductDao<Product> dao;
 
     private ProductServiceImpl() {
         dao = ArrayListProductDao.getInstance();
@@ -31,13 +31,13 @@ public class ProductServiceImpl implements ProductService {
         String stringId = uri.substring(lastSlashIndex + 1);
         Long id = Long.valueOf(stringId);
 
-        return dao.getProduct(id);
+        return dao.getEntity(id);
     }
 
     @Override
     public Product loadProductById(String idString) {
         Long id = Long.valueOf(idString);
 
-        return dao.getProduct(id);
+        return dao.getEntity(id);
     }
 }

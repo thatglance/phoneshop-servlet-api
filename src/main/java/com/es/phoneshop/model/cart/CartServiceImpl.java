@@ -4,6 +4,7 @@ import com.es.phoneshop.model.exception.NotEnoughStockException;
 import com.es.phoneshop.model.product.Product;
 
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -61,6 +62,10 @@ public class CartServiceImpl implements CartService {
             }
             cart.getCartItems().add(new CartItem(product, quantity));
         }
+        if (cart.getCurrency()==null) {
+            cart.setCurrency(product.getCurrency());
+        }
+        recalculateCart(cart);
     }
 
     @Override
@@ -85,10 +90,25 @@ public class CartServiceImpl implements CartService {
         } else {
             throw new NoSuchElementException("No product " + product.getCode() + " in cart.");
         }
+        recalculateCart(cart);
     }
 
     @Override
     public void delete(Cart cart, Product product) {
         cart.getCartItems().removeIf(cartItem -> product.equals(cartItem.getProduct()));
+        recalculateCart(cart);
+    }
+
+    private void recalculateCart(Cart cart) {
+        BigDecimal totalPrice = cart.getCartItems().stream()
+                .map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        cart.setTotalPrice(totalPrice);
+    }
+
+    @Override
+    public void clearCart(Cart cart) {
+        cart.getCartItems().clear();
+        recalculateCart(cart);
     }
 }

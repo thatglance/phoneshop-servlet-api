@@ -5,8 +5,9 @@
 
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
 <jsp:useBean id="viewedProductList" type="java.util.List" scope="request"/>
+<jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="request"/>
 
-<tags:master pageTitle="${product.description}">
+<tags:master pageTitle="${product.description}" showMiniCart="yes">
     <p>Cart: ${cart}</p>
     <table>
         <tr>
