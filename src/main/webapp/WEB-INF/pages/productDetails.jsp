@@ -34,4 +34,5 @@
         </tr>
     </table>
     <jsp:include page="recentlyViewed.jsp"/>
+    <jsp:include page="mostPopular.jsp"/>
 </tags:master>

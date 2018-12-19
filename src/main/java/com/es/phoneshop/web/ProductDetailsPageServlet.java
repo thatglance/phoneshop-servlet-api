@@ -11,12 +11,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 public class ProductDetailsPageServlet extends HttpServlet {
 
     private ProductService productService;
     private CartService cartService;
     private ViewedProductListService viewedProductListService;
+    private PopularProductListService popularProductListService;
 
     @Override
     public void init() throws ServletException {
@@ -25,6 +27,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         cartService = CartServiceImpl.getInstance();
         productService = ProductServiceImpl.getInstance();
         viewedProductListService = ViewedProductListServiceImpl.getInstance();
+        popularProductListService = PopularProductListServiceImpl.getInstance();
     }
 
     @Override
@@ -35,6 +38,10 @@ public class ProductDetailsPageServlet extends HttpServlet {
                 ViewedProductList viewedProductList = viewedProductListService.getViewedProductList(request.getSession());
                 viewedProductListService.addViewedProduct(viewedProductList, product);
                 request.setAttribute("viewedProductList", viewedProductList.getViewedProducts());
+
+                popularProductListService.addView(product);
+                List<Product> popularProductList = popularProductListService.getMostPopularProducts();
+                request.setAttribute("popularProductList", popularProductList);
 
                 request.setAttribute("product", product);
                 request.setAttribute("cart", cartService.getCart(request.getSession()));//.getCartItems());
@@ -57,6 +64,9 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
         ViewedProductList viewedProductList = viewedProductListService.getViewedProductList(request.getSession());
         request.setAttribute("viewedProductList", viewedProductList.getViewedProducts());
+
+        List<Product> popularProductList = popularProductListService.getMostPopularProducts();
+        request.setAttribute("popularProductList", popularProductList);
 
         String quantityString = request.getParameter("quantity");
 

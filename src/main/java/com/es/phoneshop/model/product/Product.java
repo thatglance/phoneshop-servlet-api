@@ -5,9 +5,9 @@ import com.es.phoneshop.model.entity.Entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.Objects;
 
 public class Product extends Entity implements Serializable {
-    //private Long id;
     private String code;
     private String description;
     /**
@@ -25,7 +25,6 @@ public class Product extends Entity implements Serializable {
     }
 
     public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
-        //this.id = id;
         super(id);
         this.code = code;
         this.description = description;
@@ -34,14 +33,6 @@ public class Product extends Entity implements Serializable {
         this.stock = stock;
         this.imageUrl = imageUrl;
     }
-
-//    public Long getId() {
-//        return id;
-//    }
-
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
 
     public String getCode() {
         return code;
@@ -107,5 +98,10 @@ public class Product extends Entity implements Serializable {
                 && currency.equals(product.currency)
                 && stock == product.stock
                 && imageUrl.equals(product.imageUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code, description, price, currency, stock, imageUrl);
     }
 }
