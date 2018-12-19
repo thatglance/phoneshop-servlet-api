@@ -1,19 +1,9 @@
 package com.es.phoneshop.model.product;
 
-import com.es.phoneshop.model.AbstractDao;
+import com.es.phoneshop.model.entity.AbstractDaoImpl;
 
 import java.util.List;
 
-public interface ProductDao extends AbstractDao<Product> {
-    //Product get(Long id);
-
-    @Override
-    Product get(Long id);
-
-    @Override
-    void save(Product object);
-
-    List<Product> findProducts(String query, String sortField, String sortMode);
-    //void save(Product product);
-    void delete(Long id);
+public abstract class ProductDao<T extends Product> extends AbstractDaoImpl<T> {
+    public abstract List<T> findProducts(String query, String sortField, String sortMode);
 }

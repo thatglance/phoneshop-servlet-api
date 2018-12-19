@@ -1,12 +1,14 @@
 package com.es.phoneshop.model.cart;
 
+import com.es.phoneshop.model.entity.Entity;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 
-public class Cart implements Serializable {
+public class Cart extends Entity implements Serializable {
     private List<CartItem> cartItems;
     private BigDecimal totalPrice;
     private Currency currency;

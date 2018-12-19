@@ -18,7 +18,7 @@ public class CheckoutPageServlet extends HttpServlet {
     private OrderService orderService;
 
     @Override
-    public void init() throws ServletException {
+    public void init() {
         cartService = CartServiceImpl.getInstance();
         orderService = OrderServiceImpl.getInstance();
     }

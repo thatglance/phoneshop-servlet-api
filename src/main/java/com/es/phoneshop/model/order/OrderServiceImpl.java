@@ -11,7 +11,7 @@ import java.util.UUID;
 public class OrderServiceImpl implements OrderService {
 
     private static volatile OrderServiceImpl instance;
-    private OrderDao orderDao;
+    private OrderDao<Order> orderDao;
 
     private OrderServiceImpl() {
         orderDao = ArrayListOrderDao.getInstance();
@@ -50,7 +50,8 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(cart.getTotalPrice());
         order.setCurrency(cart.getCurrency());
         order.setSecureId(UUID.randomUUID().toString());
-        orderDao.save(order);
+        //orderDao.save(order);
+        orderDao.saveBySecureId(order);
         return order;
     }
 
@@ -61,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
         String stringId = uri.substring(lastSlashIndex + 1);
         Long id = Long.valueOf(stringId);
 
-        return orderDao.get(id);
+        return orderDao.getEntity(id);
     }
 
     @Override
@@ -70,6 +71,6 @@ public class OrderServiceImpl implements OrderService {
         int lastSlashIndex = uri.lastIndexOf("/");
         String secureId = uri.substring(lastSlashIndex + 1);
 
-        return orderDao.get(secureId);
+        return orderDao.getEntity(secureId);
     }
 }

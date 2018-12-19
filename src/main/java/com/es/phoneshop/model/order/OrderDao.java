@@ -1,13 +1,9 @@
 package com.es.phoneshop.model.order;
 
-import com.es.phoneshop.model.AbstractDao;
+import com.es.phoneshop.model.entity.AbstractDaoImpl;
 
-public interface OrderDao extends AbstractDao<Order> {
-    @Override
-    Order get(Long id);
+public abstract class OrderDao<T extends Order> extends AbstractDaoImpl<T> {
+    public abstract T getEntity(String secureId);
 
-    Order get(String secureId);
-
-    @Override
-    void save(Order object);
+    public abstract void saveBySecureId(T entity);
 }

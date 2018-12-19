@@ -1,11 +1,13 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.model.entity.Entity;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Currency;
 
-public class Product implements Serializable, Cloneable {
-    private Long id;
+public class Product extends Entity implements Serializable {
+    //private Long id;
     private String code;
     private String description;
     /**
@@ -23,7 +25,8 @@ public class Product implements Serializable, Cloneable {
     }
 
     public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
-        this.id = id;
+        //this.id = id;
+        super(id);
         this.code = code;
         this.description = description;
         this.price = price;
@@ -32,30 +35,13 @@ public class Product implements Serializable, Cloneable {
         this.imageUrl = imageUrl;
     }
 
-//    public Product(Product otherProduct) {
-//        this.id = new Long(otherProduct.getId().longValue());
-//        this.price = new BigDecimal(otherProduct.getPrice().toString());
-//        this.currency = Currency.getInstance(otherProduct.getCurrency().getCurrencyCode());
-//
-//        //this.code =
+//    public Long getId() {
+//        return id;
 //    }
 
-    @Override
-    public Product clone() throws CloneNotSupportedException {
-        Product clone = (Product) super.clone();
-        clone.id = new Long(this.id.longValue());
-        clone.price = new BigDecimal(this.price.toString());
-        clone.currency = Currency.getInstance(this.currency.getCurrencyCode());
-        return clone;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
 
     public String getCode() {
         return code;
@@ -114,7 +100,7 @@ public class Product implements Serializable, Cloneable {
             return false;
         }
         Product product = (Product) object;
-        return id.equals(product.id)
+        return this.getId().equals(product.getId())
                 && code.equals(product.code)
                 && description.equals(product.description)
                 && price.equals(product.price)
