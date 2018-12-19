@@ -40,4 +40,9 @@ public class ProductServiceImpl implements ProductService {
 
         return dao.getEntity(id);
     }
+
+    @Override
+    public Product loadProductByCode(String codeString) {
+        return dao.getProductByCode(codeString);
+    }
 }

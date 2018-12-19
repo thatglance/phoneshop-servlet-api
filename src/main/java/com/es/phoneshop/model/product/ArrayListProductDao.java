@@ -11,7 +11,7 @@ public class ArrayListProductDao<T extends Product> extends ProductDao<T> {
     //private List<Product> productList;
 
     private ArrayListProductDao() {
-     //   productList = new ArrayList<>();
+        //   productList = new ArrayList<>();
     }
 
     public static ArrayListProductDao<Product> getInstance() {
@@ -72,8 +72,18 @@ public class ArrayListProductDao<T extends Product> extends ProductDao<T> {
 
         if (sortField != null && sortMode != null) {
             return sortProducts(foundProducts, sortField, sortMode);
-        }else {
+        } else {
             return foundProducts;
         }
+    }
+
+    @Override
+    public T getProductByCode(String code) throws NoSuchElementException {
+        T result = entities.stream().filter(entity -> entity.getCode().equals(code))
+                .findFirst().orElse(null);
+        if(result==null) {
+            throw new NoSuchElementException("No element with code " + code);
+        }
+        return result;
     }
 }

@@ -4,7 +4,7 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <jsp:useBean id="products" type="java.util.ArrayList" scope="request"/>
-<tags:master pageTitle="Product list" pageClass="product-list" showMiniCart="yes">
+<tags:master pageTitle="Product list" pageClass="product-list" showMiniCart="yes" showQuickOrder="yes">
     <p>
         Welcome to Expert-Soft training!
     </p>

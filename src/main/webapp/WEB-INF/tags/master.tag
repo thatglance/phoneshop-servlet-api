@@ -2,6 +2,7 @@
 <%@ attribute name="pageTitle" type="java.lang.String" required="true" %>
 <%@ attribute name="pageClass" type="java.lang.String" required="false" %>
 <%@ attribute name="showMiniCart" type="java.lang.String" required="false" %>
+<%@ attribute name="showQuickOrder" type="java.lang.String" required="false" %>
 <jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="request"/>
 <html>
 <head>
@@ -17,6 +18,9 @@
     </a>
     <c:if test="${showMiniCart eq 'yes'}">
         <a href="${pageContext.servletContext.contextPath}/cart">Cart: ${cart.totalPrice}</a>
+    </c:if>
+    <c:if test="${showQuickOrder eq 'yes'}">
+        <a href="${pageContext.servletContext.contextPath}/quickOrder">Quick order</a>
     </c:if>
 </header>
 <main>

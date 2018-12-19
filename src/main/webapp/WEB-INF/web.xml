@@ -84,6 +84,16 @@
     <url-pattern>/orderOverview/*</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>quickOrderEntry</servlet-name>
+    <servlet-class>com.es.phoneshop.web.QuickOrderEntryServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>quickOrderEntry</servlet-name>
+    <url-pattern>/quickOrder</url-pattern>
+  </servlet-mapping>
+
   <error-page>
     <error-code>404</error-code>
     <location>/WEB-INF/pages/error.jsp</location>
