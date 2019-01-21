@@ -40,11 +40,12 @@ public class OrderServiceImpl implements OrderService {
         List<CartItem> cartItems = cart.getCartItems();
         List<CartItem> orderItems = new ArrayList<>();
         cartItems.forEach(cartItem -> {
-            try {
-                orderItems.add(cartItem.clone());
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                orderItems.add(cartItem.clone());
+                orderItems.add(new CartItem(cartItem));
+//            } catch (CloneNotSupportedException e) {
+//                e.printStackTrace();
+//            }
         });
         order.setCartItems(orderItems);
         order.setTotalPrice(cart.getTotalPrice());

@@ -44,11 +44,14 @@ public class QuickOrderEntryServlet extends HttpServlet {
 
         int productsNum = (productCodes == null ? 0 : productCodes.length);
         for (int i = 0; i < productsNum; i++) {
-            Product product = productService.loadProductByCode(productCodes[i]);
-            try {
-                cartService.updateCart(cart, product, quantities[i]);
-            } catch (NotEnoughStockException | NoSuchElementException | IllegalArgumentException e) {
-                quantityErrors.put(product.getId(), e.getMessage());
+            if (!productCodes[i].isEmpty()) {
+                Product product = productService.loadProductByCode(productCodes[i]);
+                try {
+//                cartService.updateCart(cart, product, quantities[i]);
+                    cartService.addToCart(cart, product, quantities[i]);
+                } catch (NotEnoughStockException | NoSuchElementException | IllegalArgumentException e) {
+                    quantityErrors.put(product.getId(), e.getMessage());
+                }
             }
         }
         request.setAttribute("quantityErrors", quantityErrors);
