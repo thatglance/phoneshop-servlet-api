@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Currency;
 
-public class CartItem implements Serializable, Cloneable {
+public class CartItem implements Serializable{
     private Product product;
     private int quantity;
 
@@ -19,8 +19,9 @@ public class CartItem implements Serializable, Cloneable {
         quantity = cartItem.quantity;
 
         Product product = cartItem.product;
+        long savedId = product.getId();
         this.product = new Product(
-                new Long(product.getId()),
+                new Long(savedId),
                 new String(product.getCode()),
                 new String(product.getDescription()),
                 new BigDecimal(product.getPrice().toString()),
@@ -48,12 +49,5 @@ public class CartItem implements Serializable, Cloneable {
     @Override
     public String toString() {
         return "CartItem [" + product.getCode() + ", " + quantity + "]";
-    }
-
-    @Override
-    public CartItem clone() throws CloneNotSupportedException {
-        CartItem clone = (CartItem) super.clone();
-        clone.setProduct(product);
-        return clone;
     }
 }

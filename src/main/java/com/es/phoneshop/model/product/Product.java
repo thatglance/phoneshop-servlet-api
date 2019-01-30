@@ -25,7 +25,8 @@ public class Product extends Entity implements Serializable {
     }
 
     public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
-        super(id);
+        //super(id);
+        this.setId(id);
         this.code = code;
         this.description = description;
         this.price = price;

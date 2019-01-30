@@ -13,15 +13,14 @@
 <body class="${pageClass}">
 <header>
     <a href="${pageContext.servletContext.contextPath}">
-        <%--<img src="${pageContext.servletContext.contextPath}/images/logo.svg"/>--%>
         PhoneShop
     </a>
     <c:if test="${showMiniCart eq 'yes'}">
         <a href="${pageContext.servletContext.contextPath}/cart">Cart: ${cart.totalPrice}</a>
     </c:if>
-    <c:if test="${showQuickOrder eq 'yes'}">
+    <%--<c:if test="${showQuickOrder eq 'yes'}">
         <a href="${pageContext.servletContext.contextPath}/quickOrder">Quick order</a>
-    </c:if>
+    </c:if>--%>
 </header>
 <main>
     <%--<br>

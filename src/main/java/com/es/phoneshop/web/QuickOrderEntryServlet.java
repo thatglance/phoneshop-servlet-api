@@ -43,6 +43,7 @@ public class QuickOrderEntryServlet extends HttpServlet {
         Map<Long, String> quantityErrors = new HashMap<>();
 
         int productsNum = (productCodes == null ? 0 : productCodes.length);
+
         for (int i = 0; i < productsNum; i++) {
             if (!productCodes[i].isEmpty()) {
                 Product product = productService.loadProductByCode(productCodes[i]);
@@ -66,7 +67,8 @@ public class QuickOrderEntryServlet extends HttpServlet {
             response.sendRedirect(request.getRequestURI() + message);
         } else {
             request.setAttribute("cart", cart);
-            request.getRequestDispatcher("/WEB-INF/pages/cart.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/pages/quickOrder.jsp").forward(request, response);
+            //response.sendRedirect(request.getRequestURI());
         }
     }
 }

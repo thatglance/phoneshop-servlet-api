@@ -26,7 +26,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product loadProduct(HttpServletRequest request) throws NumberFormatException {
-        StringBuffer uri = request.getRequestURL();
+//        StringBuffer uri = request.getRequestURL();
+        String uri = request.getRequestURI();
         int lastSlashIndex = uri.lastIndexOf("/");
         String stringId = uri.substring(lastSlashIndex + 1);
         Long id = Long.valueOf(stringId);
